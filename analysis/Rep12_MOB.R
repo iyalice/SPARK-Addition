@@ -1,7 +1,7 @@
 rm(list=ls())
 library(SPARK)
 library("data.table")
-Rep12_MOB_count_matrix <- fread("~/Rep12_MOB_count_matrix-1.tsv")
+Rep12_MOB_count_matrix <- fread("./data/Rep12_MOB_count_matrix-1.tsv")
 col1<-Rep12_MOB_count_matrix$V1
 as.character(col1)
 row.names(Rep12_MOB_count_matrix) <- col1
@@ -48,4 +48,4 @@ result=spark@res_mtest[order(spark@res_mtest$combined_pvalue,decreasing = F),]
 res_pval=result[,1:15]
 combined_pvalue <- apply(res_pval, 1, min)
 result <- data.frame(res_pval, combined_pvalue = combined_pvalue,  adjusted_pvalue = p.adjust(combined_pvalue, method="BY") )
-save(result,file = "~/Rep12_MOB.RData")
+save(result,file = "./output/Rep12_MOB.RData")
