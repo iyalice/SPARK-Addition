@@ -1,6 +1,6 @@
 rm(list=ls())
 library(SPARK)
-load("~/Layer2_BC_Count.rds")
+load("./data/Layer2_BC_Count.rds")
 info <- cbind.data.frame(x=as.numeric(sapply(strsplit(colnames(rawcount),split="x"),"[",1)),
                          y=as.numeric(sapply(strsplit(colnames(rawcount),split="x"),"[",2)),
                          total_counts=apply(rawcount,2,sum))
@@ -41,4 +41,4 @@ result=spark@res_mtest[order(spark@res_mtest$combined_pvalue,decreasing = F),]
 res_pval=result[,1:15]
 combined_pvalue <- apply(res_pval,1,min)
 result <- data.frame(res_pval, combined_pvalue = combined_pvalue,  adjusted_pvalue = p.adjust(combined_pvalue, method="BY") )
-save(result,file = "~/Layer2_BC.RData")
+save(result,file = "./output/Layer2_BC.RData")
