@@ -48,4 +48,4 @@ result=spark@res_mtest[order(spark@res_mtest$combined_pvalue,decreasing = F),]
 res_pval=result[,1:15]
 combined_pvalue <- apply(res_pval, 1, min)
 result <- data.frame(res_pval, combined_pvalue = combined_pvalue,  adjusted_pvalue = p.adjust(combined_pvalue, method="BY") )
-save(result,file = "~/Rep12_MOB(15core).RData")
+save(result,file = "~/Rep12_MOB.RData")
