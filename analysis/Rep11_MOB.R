@@ -1,6 +1,6 @@
 rm(list=ls())
 library(SPARK)
-Rep11_MOB_count_matrix <- readRDS("~/Rep11_MOB_count_matrix.RDS")
+Rep11_MOB_count_matrix <- readRDS("./data/Rep11_MOB_count_matrix.RDS")
 info <- cbind.data.frame(x=as.numeric(sapply(strsplit(colnames(Rep11_MOB_count_matrix),split="x"),"[",1)),
                          y=as.numeric(sapply(strsplit(colnames(Rep11_MOB_count_matrix),split="x"),"[",2)),
                          total_counts=apply(Rep11_MOB_count_matrix,2,sum))
@@ -42,4 +42,4 @@ result=spark@res_mtest[order(spark@res_mtest$combined_pvalue,decreasing = F),]
 res_pval=result[,1:15]
 combined_pvalue <- apply(res_pval,1,min)
 result <- data.frame(res_pval, combined_pvalue=combined_pvalue,  adjusted_pvalue = p.adjust(combined_pvalue, method="BY") )
-save(result,file = "./Rep11_MOB.RData")
+save(result,file = "./output/Rep11_MOB.RData")
