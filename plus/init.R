@@ -1,7 +1,8 @@
+rm(list=ls())
 library(SPARK)
 library(R.matlab)
 library(matlabr)
-load("E:/R/R-4.1.2/library/SPARK/data/Layer2_BC_Count.rds")
+load("./data/Layer2_BC_Count.rds")
 rawcount[1:10,1:10]
 info <- cbind.data.frame(x=as.numeric(sapply(strsplit(colnames(rawcount),split="x"),"[",1)),
                          y=as.numeric(sapply(strsplit(colnames(rawcount),split="x"),"[",2)),
