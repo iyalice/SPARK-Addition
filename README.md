@@ -12,5 +12,9 @@ SPARK-Addition是一个用于鉴别空间可变基因的程序，这是生物信
 ### 加法核的构建
 X是spark中location变量所存储的二维坐标点拆分为横纵坐标值的信息，为n×2矩阵，ED对该矩阵中每个坐标对与其他坐标对的欧式距离进行计算，得到关于欧式距离的n×n实对称矩阵。ComputeGaussianPL函数将ED矩阵中所有的欧式距离进行对数变换，再按照数值的大小设置了10个区间分界点，而lrang存储了第3到第7个区间分界点。代码部分第一个for循环即为加法核的构建过程，也是SPARK-Addition的核心思路。即将lrang存储的5个点用于构建5个尺度参数不同的高斯核。加法核则在此之上将5个不同的高斯核进行两两加法组合，得到了10个全新的加法核，并记为kernel1-10。而第二个for循环用于构建5个尺度参数不同的周期核，记为kernel11-15。这15个核函数存储于kmt列表。
 
+![Image text](https://github.com/iyalice/SPARK-Addition/blob/main/code%20screenshot/Layer2_BC(2).png)
+
 ### 核函数检验与结果筛选
 spark.test函数根据提供的spark数据进行检验,并有三个可调节的参数。我们设置kernel_mat = kmt将存储在met列表中的10个加法核和5个周期核输入到函数之中；check_positive检测核函数矩阵是否为正；verbose则表示用户是否希望输出拟合信息。在经过spark.test函数检验后，需要对分析的数据进行筛选，这些数据储存于spark@res_mtest。该数据包括每个基因在每个核函数下的匹配程度，在数据中体现为大小不同的p值，每个基因在15个核中的最小p值记为combined_pvalue。对combined_pvalue使用Benjamini–Yekutieli程序控制错误发生率（FDR），因此得到人乳腺癌数据中每个基因的adjusted_pvalue。最终，我们筛选adjusted_pvalue<0.05的基因作为SPARK-Addition最终鉴定的SVG。
+
+![Image text](https://github.com/iyalice/SPARK-Addition/blob/main/code%20screenshot/Layer2_BC(3).png)
