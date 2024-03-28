@@ -1,7 +1,7 @@
 
 %% Load GPML
 addpath(genpath('gpml'))
-gene_table = readtable('./BC_pvals.csv');
+gene_table = readtable('./data/BC_pvals.csv');
 for k = 1:107
     gene = cell2mat(gene_table{k,"gene"});
     path = sprintf('./%s.mat' ,gene);
@@ -21,6 +21,6 @@ for k = 1:107
     best_nll = nlls(end);
     
     
-    fid = fopen("./new_result_2.csv",'a');
+    fid = fopen("./output/new_result.csv",'a');
     fprintf(fid,'%s,%f\n',gene,hyp_opt.cov);
 end
