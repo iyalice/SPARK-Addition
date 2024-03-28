@@ -1,5 +1,6 @@
-##------------------------------------------------------------
+##------------------------------------------------
 ## 模拟数据的生成 Data Generation
+##------------------------------------------------
 ## Generate the countdata based on the info from the realdata and
 ## patterns summarized from the SpatialDE result
 
@@ -7,27 +8,17 @@
 ##-----------------
 rm(list = ls())
 
-# based_on <- "1" # spark1 or spark2
-
-PorN <- "null" # power or null
-
-# if (based_on == "1") { # 这一步load决定了我们用什么spark来生成模拟数据
-#   load(paste0("./output/Rep11_MOB_spark.rds"))
-# } else if (based_on == "2") {
-#   load(paste0("./output/Rep11_MOB_spark2.rds"))
-# }
+PorN <- "power" # power or null
 
 load(paste0("./output/Rep11_MOB_spark.rds"))
 
-dirname <- paste0("./sim_data/", PorN, "_test/data")
+dirname <- paste0("./sim_spark", PorN, "_test/data")
 
 if (!dir.exists(dirname)){ # 生成文件夹
   dir.create(dirname) 
 } else { 
   print(paste0(dirname, " already exists!")) 
 }
-
-
 
 info <- spark@location
 info$total_counts <- spark@lib_size
@@ -44,16 +35,16 @@ tau2 <- sapply(1:length(spark@res_vc), function(x) {
 
 load("./output/MOB_Pattern_SpatialDE.rds")
 
-itau = 60 # 残差
+itau = 35                     # 设置噪声方差0.35
 if (PorN == "power") {
-  numSignal <- 1000 # SVG的个数有1000个
+  numSignal <- 1000           # 在power test中设置SVG的个数为1000个
 } else if (PorN == "null") {
-  numSignal <- 0 # SVG的个数有0个
+  numSignal <- 0              # 在null test中设置SVG的个数为0个
 }
-numGene <- 10000 # 所有基因共有10000个
+numGene <- 10000              # 所有基因共有10000个
 newN <- info$total_counts
 
-for (ipt in 2:2) { # SE基因的三种表达模式
+for (ipt in 2:4) {            # SE基因的三种表达模式:2代表I\3代表II\4代表III
   
   dirname1 <- paste0(dirname, "/pattern", ipt)
   if (!dir.exists(dirname1)){ # 生成文件夹
@@ -61,13 +52,13 @@ for (ipt in 2:2) { # SE基因的三种表达模式
   } else { 
     print(paste0(dirname1, " already exists!")) 
   }
-  for (ifc in 2:2) { # 乘数因子, 基因表达水平的比值
+  for (ifc in 2:4) {          # 乘数因子, 基因表达水平的比值
     
     pattern <- datlist[[paste0("pattern", ipt)]]
     grp <- as.numeric(pattern[, 2] > mean(pattern[, 2])) + 1
     uu <- c(nb[1], nb[ifc], nb[1])
     
-    for (ipow in 1:10) { # 平行重复试验
+    for (ipow in 1:10) {      # 10次平行重复试验
       
       set.seed(ipow)
       beta0 <- uu[grp]
@@ -91,18 +82,10 @@ for (ipt in 2:2) { # SE基因的三种表达模式
       rownames(countdata) <- paste0("gene", 1:nrow(countdata))
       colnames(countdata) <- pattern[, 1]
       
-      
-      if (PorN == "Power") {
-        write.csv(t(countdata), file = paste0(dirname1, "/sim_MOB_", PorN, "_pt", 
-                                              ipt, "_fc", ifc, "_tau", itau, "_count", 
-                                              ipow, ".csv"), 
-                  row.names = T)
-      } else {
-        write.csv(t(countdata), file = paste0(dirname1, "/sim_MOB_", PorN, 
-                                              "_tau", itau, "_count", 
-                                              ipow, ".csv"),
-                  row.names = T)
-      }
+      write.csv(t(countdata), file = paste0(dirname1, "/sim_MOB_ba", based_on, "_pt", 
+                                            ipt, "_fc", ifc, "_tau", itau, "_", PorN, 
+                                            ipow, ".csv"), 
+                row.names = T)
     }
   }
 }
