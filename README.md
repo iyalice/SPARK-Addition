@@ -1,7 +1,7 @@
 # SPARK-Addition
-SPARK-Addition是一个用于鉴别空间可变基因的程序，这是生物信息学的热门话题。程序在SPARK的基础上改进了呈现空间表达模式的核函数，并修改了P值的计算规则。这使得 SPARK-Addition 的性能比原始 SPARK 更好。
+SPARK-Addition是一个用于鉴别空间可变基因的程序，这是生物信息学的热门话题。我们在SPARK的基础上改进了呈现空间表达模式的核函数，并修改了P值的计算规则。这使得 SPARK-Addition 的性能比原始 SPARK 更好。
 
-我们将所有数据放在./data中，原始代码放在./analysis中，输出放在./output中，绘图和相关生成代码放在./Plots中，模拟数据生成代码放在./simulation中，并且我们还给出了我们的复杂版本./plus 中的程序。供您参考，需要 GPML 放入 ./plus 才能使复杂的程序运行。
+我们将所有数据放在./data中，原始代码放在./analysis中，输出放在./output中，绘图和相关生成代码放在./Plots中，模拟数据生成代码放在./simulation中，并且我们还给出了程序的复杂版本./plus 。注意：需要将gpml包置于./plus下，才能使main.R或optimizer_2.m正常运行。
 
 # 程序使用示例
 ### 数据预处理与SPARK的构建
